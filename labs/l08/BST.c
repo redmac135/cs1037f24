@@ -3,30 +3,20 @@
 Node *addNode(Node *root, int value) {
   // case where tree is empty
   if (isEmpty(root)) {
-    Node *newNode = (Node *)malloc(sizeof(Node));
-    newNode->data = value;
-    newNode->left = NULL;
-    newNode->right = NULL;
-    return newNode;
+    return createNode(value);
   }
 
   // check where value belongs
   if (value < root->data) {
     if (root->left == NULL) {
-      Node *newNode = (Node *)malloc(sizeof(Node));
-      newNode->data = value;
-      newNode->left = NULL;
-      newNode->right = NULL;
+      Node *newNode = createNode(value);
       root->left = newNode;
     } else {
       addNode(root->left, value);
     }
   } else if (value > root->data) {
     if (root->right == NULL) {
-      Node *newNode = (Node *)malloc(sizeof(Node));
-      newNode->data = value;
-      newNode->left = NULL;
-      newNode->right = NULL;
+      Node *newNode = createNode(value);
       root->right = newNode;
     } else {
       addNode(root->right, value);
@@ -67,49 +57,85 @@ Node *deleteNode(Node *root, int value) {
   }
 
   // search for the node to delete
-  Node *prev = NULL;
-  Node *current = root;
-  while (current != NULL && current->data != value) {
-    prev = current;
-    if (value < current->data)
-      current = current->left;
-    else if (value > current->data)
-      current = current->right;
-    else
-      break;
+  if (value < root->data) {
+    root->left = deleteNode(root->left, value);
+  } else {
+    root->right = deleteNode(root->right, value);
   }
 
-  // node not found
-  if (current == NULL)
+  return root;
+}
+
+Node *searchNode(Node *root, int value) {
+  if (isEmpty(root)) {
+    return NULL;
+  }
+
+  if (root->data == value) {
     return root;
+  }
 
-  // case 1: node has no children
-  if (current->left == NULL && current->right == NULL) {
-    // case where this is the root node
-    if (prev == NULL) {
-      free(current);
-      return NULL;
-    }
-
-    if (prev->left == current)
-      prev->left = NULL;
-    else
-      prev->right = NULL;
-    free(current);
+  if (value < root->data) {
+    return searchNode(root->left, value);
+  } else {
+    return searchNode(root->right, value);
   }
 }
 
-Node *searchNode(Node *root, int value) { return NULL; }
+int computeSize(Node *root) {
+  // base case
+  if (isEmpty(root)) {
+    return 0;
+  }
 
-int computeSize(Node *root) { return 0; }
+  // recursively compute the size of the left and right subtrees
+  return 1 + computeSize(root->left) + computeSize(root->right);
+}
 
-void inOrderTraversal(Node *root) {}
+void inOrderTraversal(Node *root) {
+  // if root is NULL, do nothing
+  if (root != NULL) {
+    // traverse left-root-right
+    inOrderTraversal(root->left);
+    visit(root);
+    inOrderTraversal(root->right);
+  }
+  return;
+}
 
-void postOrderTraversal(Node *root) {}
+void postOrderTraversal(Node *root) {
+  // if root is NULL, do nothing
+  if (root != NULL) {
+    // traverse left-right-root
+    postOrderTraversal(root->left);
+    postOrderTraversal(root->right);
+    visit(root);
+  }
+  return;
+}
+
+void preOrderTraversal(Node *root) {
+  // if root is NULL, do nothing
+  if (root != NULL) {
+    // traverse root-left-right
+    visit(root);
+    preOrderTraversal(root->left);
+    preOrderTraversal(root->right);
+  }
+  return;
+}
 
 void visit(Node *node) {
   if (node != NULL)
     printf("%d ", node->data);
+}
+
+Node *createNode(int value) {
+  Node *newNode = (Node *)malloc(sizeof(Node));
+  newNode->data = value;
+  newNode->left = NULL;
+  newNode->right = NULL;
+  return newNode;
 }
 
 Node *findSmallestValue(Node *root) {
@@ -118,4 +144,5 @@ Node *findSmallestValue(Node *root) {
     current = current->left;
   return current;
 }
+
 int isEmpty(Node *root) { return root == NULL; }

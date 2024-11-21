@@ -69,6 +69,13 @@ void preOrderTraversal(Node *root);
 void visit(Node *node);
 
 /**
+ * Creates a new node with the given value.
+ * @param value The value to store in the node.
+ * @return Pointer to the newly created node.
+ */
+Node *createNode(int value);
+
+/**
  * Finds the node with the smallest value in a subtree.
  * @param root Pointer to the root of the subtree.
  * @return Pointer to the node with the smallest value.

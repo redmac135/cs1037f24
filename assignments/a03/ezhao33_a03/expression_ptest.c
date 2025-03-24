@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
-char *tests[] = {"1+2", "(1+2*3)", "10-((3*4)+8)/4"};
+char *tests[] = {"(5+3)*(5-3)", "(1+2*3)", "10-((3*4)+8)/4"};
 
 void test_infix_to_postfix() {
   printf("------------------\n");
